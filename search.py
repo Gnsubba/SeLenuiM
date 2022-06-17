@@ -5,6 +5,9 @@ from selenium.webdriver.common.by import By
 # Making the object of webdiver and using the Chrome driver and giving the path to the downloaded chromedriver.
 driver = webdriver.Chrome('/Users/mac/Documents/WebDriver/chromedriver')
 
+# Search keyword
+search_keyword = 'सरकार'
+
 # Function to click the search button and give the parameter and click event
 def search():
     driver.get('https://www.annapurnapost.com')
@@ -15,7 +18,12 @@ def search():
 
     search_button1 = driver.find_element_by_id('searchField')
 
-    search_button1.send_keys('सरकार')
+    try:
+        search_button1.send_keys(search_keyword)
+    except:
+        print("No content found")
+        driver.close()
+        driver.__exit__()
 
     search_button2 = driver.find_element_by_class_name('btn-search')
     search_button2.click()
@@ -60,16 +68,19 @@ content = []
 # Function to get the content from the extracted links or urls
 def get_content():
     for link in links:
-        driver.get(str(link))
-        para_element = driver.find_elements_by_class_name('news-content')
-        for para in para_element:
-            senten = para.find_element_by_tag_name('p')
-            sentens = senten.get_attribute('innerHTML')
-            content.append(sentens)
-            print(sentens)
-            print('\n')
-            print('\n')
-            print('\n')
+        try:
+            driver.get(str(link))
+            para_element = driver.find_elements_by_class_name('news-content')
+            for para in para_element:
+                senten = para.find_element_by_tag_name('p')
+                sentens = senten.get_attribute('innerHTML')
+                content.append(sentens)
+                print(sentens)
+                print('\n')
+                print('\n')
+                print('\n')
+        except:
+            continue
 
 
 get_content()
